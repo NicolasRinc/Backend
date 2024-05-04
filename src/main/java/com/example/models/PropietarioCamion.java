@@ -110,11 +110,11 @@ public class PropietarioCamion implements Serializable {
         this.direccion = direccion;
     }
 
-    public Vehiculo getVehicle() {
+    public Vehiculo getVehiculo() {
         return vehiculo;
     }
 
-    public void setVehicle(Vehiculo vehiculo) {
+    public void setVehiculo(Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
     }
 

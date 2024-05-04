@@ -8,6 +8,7 @@ package com.example.models;
 import com.sun.istack.NotNull;
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,6 +18,7 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.eclipse.persistence.nosql.annotations.DataFormatType;
 import org.eclipse.persistence.nosql.annotations.NoSql;
+import com.example.models.Conductor;
 
 /**
  *
@@ -38,7 +40,9 @@ public class Remision implements Serializable {
     private String origen;
     private String destino;
     private String placaCamion;
-    private String conductor;
+    
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Conductor conductor;
 
     @ManyToOne
     private Ruta ruta;
@@ -83,11 +87,11 @@ public class Remision implements Serializable {
         this.placaCamion = placaCamion;
     }
 
-    public String getConductor() {
+    public Conductor getConductor() {
         return conductor;
     }
 
-    public void setConductor(String conductor) {
+    public void setConductor(Conductor conductor) {
         this.conductor = conductor;
     }
 

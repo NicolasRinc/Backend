@@ -9,8 +9,8 @@ public class RemisionDTO {
     private String origen;
     private String destino;
     private String placaCamion;
-    private String conductor;
-    private RutaDTO ruta;
+    private Conductor conductor;
+    private Ruta ruta;
 
     public String getId() {
         return id;
@@ -52,19 +52,19 @@ public class RemisionDTO {
         this.placaCamion = placaCamion;
     }
 
-    public String getConductor() {
+    public Conductor getConductor() {
         return conductor;
     }
 
-    public void setConductor(String conductor) {
+    public void setConductor(Conductor conductor) {
         this.conductor = conductor;
     }
 
-    public RutaDTO getRuta() {
+    public Ruta getRuta() {
         return ruta;
     }
 
-    public void setRuta(RutaDTO ruta) {
+    public void setRuta(Ruta ruta) {
         this.ruta = ruta;
     }
 }

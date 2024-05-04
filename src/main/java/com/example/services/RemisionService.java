@@ -6,6 +6,7 @@
 package com.example.services;
 
 import com.example.PersistenceManager;
+import com.example.models.Conductor;
 import com.example.models.Remision;
 import com.example.models.RemisionDTO;
 import com.example.models.Ruta;
@@ -25,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 
 /**
  *
@@ -62,8 +64,12 @@ public class RemisionService {
             remision.setOrigen(remisionDTO.getOrigen());
             remision.setDestino(remisionDTO.getDestino());
             remision.setPlacaCamion(remisionDTO.getPlacaCamion());
-            remision.setConductor(remisionDTO.getConductor());
-
+            Conductor conductor = entityManager.find(Conductor.class, remisionDTO.getConductor().getId());
+            if (conductor == null) {
+                // Si la ruta no existe, devuelve un error
+                return Response.status(Response.Status.BAD_REQUEST).entity("El conductor no existe").build();
+            }
+            remision.setConductor(conductor);
             // Buscar la ruta correspondiente usando el ID proporcionado
             Ruta ruta = entityManager.find(Ruta.class, remisionDTO.getRuta().getId());
             if (ruta == null) {
@@ -83,31 +89,60 @@ public class RemisionService {
         }
     }
 
-    @PUT
-    @Path("/update/{id}")
-    public Response actualizarRemision(@PathParam("id") String id, Remision remisionActualizada) {
+@PUT
+@Path("/update/{id}")
+public Response actualizarRemision(@PathParam("id") String id, Remision remisionActualizada) {
+    EntityTransaction transaction = entityManager.getTransaction();
+    try {
+        transaction.begin();
+
         Remision remision = entityManager.find(Remision.class, id);
         if (remision == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Remisión no encontrada").build();
         }
+
+        // Actualizamos los campos de la remisión con los valores proporcionados
         remision.setFechaHoraRecogida(remisionActualizada.getFechaHoraRecogida());
         remision.setOrigen(remisionActualizada.getOrigen());
         remision.setDestino(remisionActualizada.getDestino());
         remision.setPlacaCamion(remisionActualizada.getPlacaCamion());
         remision.setConductor(remisionActualizada.getConductor());
         remision.setRuta(remisionActualizada.getRuta());
+
         entityManager.merge(remision);
-        return Response.ok().build();
+        transaction.commit();
+
+        return Response.ok().entity("Remisión actualizada correctamente").build();
+    } catch (Exception e) {
+        if (transaction.isActive()) {
+            transaction.rollback();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al actualizar la remisión").build();
     }
+}
 
     @DELETE
-    @Path("/delete/{id}")
-    public Response eliminarRemision(@PathParam("id") String id) {
+@Path("/delete/{id}")
+public Response eliminarRemision(@PathParam("id") String id) {
+    EntityTransaction transaction = entityManager.getTransaction();
+    try {
+        transaction.begin();
+
         Remision remision = entityManager.find(Remision.class, id);
         if (remision == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Remisión no encontrada").build();
         }
+
         entityManager.remove(remision);
-        return Response.ok().build();
+        transaction.commit();
+
+        return Response.ok().entity("Remisión eliminada correctamente").build();
+    } catch (Exception e) {
+        if (transaction.isActive()) {
+            transaction.rollback();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al eliminar la remisión").build();
     }
+}
+
 }

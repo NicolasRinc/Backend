@@ -34,7 +34,7 @@ import org.json.simple.JSONObject;
  *
  * @author Mauricio
  */
-@Path("/conductor")
+@Path("/propietarioCarga")
 @Produces(MediaType.APPLICATION_JSON)
 public class PropietarioCargaService {
 
@@ -82,13 +82,13 @@ public class PropietarioCargaService {
 
                 return Response.status(Response.Status.OK)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("Conductor actualizado correctamente")
+                        .entity("Propietario de Carga actualizado correctamente")
                         .build();
 
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("No se encontró el conductor")
+                        .entity("No se encontró el Propietario de Carga")
                         .build();
             }
         } catch (Exception e) {
@@ -97,12 +97,12 @@ public class PropietarioCargaService {
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .header("Access-Control-Allow-Origin", "*")
-                    .entity("Error al actualizar el conductor")
+                    .entity("Error al actualizar el Propietario de Carga")
                     .build();
         }
     }
 
-    @POST
+    @DELETE
     @Path("/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -118,12 +118,12 @@ public class PropietarioCargaService {
 
                 return Response.status(Response.Status.OK)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("Conductor eliminado correctamente")
+                        .entity("Propietario de Carga eliminado correctamente")
                         .build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("No se encontró el conductor")
+                        .entity("No se encontró el Propietario de Carga")
                         .build();
             }
         } catch (Exception e) {
@@ -133,7 +133,7 @@ public class PropietarioCargaService {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .header("Access-Control-Allow-Origin", "*")
-                    .entity("Error al eliminar el conductor")
+                    .entity("Error al eliminar el Propietario de Carga")
                     .build();
         }
     }
@@ -154,7 +154,7 @@ public class PropietarioCargaService {
             entityManager.persist(c);
             entityManager.getTransaction().commit();
             entityManager.refresh(c);
-            rta.put("competitor_id", c.getId());
+            rta.put("id_propietarioCarga", c.getId());
         } catch (Throwable t) {
             t.printStackTrace();
             if (entityManager.getTransaction().isActive()) {

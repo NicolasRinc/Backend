@@ -35,7 +35,7 @@ import org.json.simple.JSONObject;
  *
  * @author Mauricio
  */
-@Path("/propietariocamion")
+@Path("/propietarioCamion")
 @Produces(MediaType.APPLICATION_JSON)
 public class PropietarioCamionService {
 
@@ -78,20 +78,20 @@ public class PropietarioCamionService {
                 propietario.setDireccion(propietarioactualizado.getDireccion());
                 propietario.setNombre(propietarioactualizado.getNombre());
                 propietario.setTelefono(propietarioactualizado.getTelefono());
-                propietario.setVehicle(propietarioactualizado.getVehiculo());
+                propietario.setVehiculo(propietarioactualizado.getVehiculo());
                 // Persistir los cambios con merge
                 entityManager.merge(propietario);
                 transaction.commit();
 
                 return Response.status(Response.Status.OK)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("Conductor actualizado correctamente")
+                        .entity("Propietario de camion actualizado correctamente")
                         .build();
 
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("No se encontró el conductor")
+                        .entity("Propietario de camion")
                         .build();
             }
         } catch (Exception e) {
@@ -100,12 +100,12 @@ public class PropietarioCamionService {
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .header("Access-Control-Allow-Origin", "*")
-                    .entity("Error al actualizar el conductor")
+                    .entity("Error al actualizar el propietario de camion")
                     .build();
         }
     }
 
-    @POST
+    @DELETE
     @Path("/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -121,12 +121,12 @@ public class PropietarioCamionService {
 
                 return Response.status(Response.Status.OK)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("Propietario eliminado correctamente")
+                        .entity("Propietario de camion eliminado correctamente")
                         .build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND)
                         .header("Access-Control-Allow-Origin", "*")
-                        .entity("No se encontró el Propietario")
+                        .entity("No se encontró el Propietario de camion")
                         .build();
             }
         } catch (Exception e) {
@@ -136,7 +136,7 @@ public class PropietarioCamionService {
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .header("Access-Control-Allow-Origin", "*")
-                    .entity("Error al eliminar el Propietario")
+                    .entity("Error al eliminar el Propietario de camion")
                     .build();
         }
     }
@@ -153,14 +153,14 @@ public class PropietarioCamionService {
         c.setTelefono(propietariocamion.getTelefono());
        
         propietariocamion.setVehiculo(obteneridvehiculo(propietariocamion.getVehiculo()));
-        c.setVehicle(propietariocamion.getVehiculo());
+        c.setVehiculo(propietariocamion.getVehiculo());
         propietariocamion.setId(c.getId());
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(c);
             entityManager.getTransaction().commit();
             entityManager.refresh(c);
-            rta.put("id_propietario", c.getId());
+            rta.put("id_propietarioCamion", c.getId());
         } catch (Throwable t) {
             t.printStackTrace();
             if (entityManager.getTransaction().isActive()) {

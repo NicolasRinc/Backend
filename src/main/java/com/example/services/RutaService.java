@@ -69,25 +69,52 @@ public class RutaService {
     }
 
     @PUT
-    @Path("/update/{id}")
-    public Response actualizarRuta(@PathParam("id") String id, Ruta rutaActualizada) {
+@Path("/update/{id}")
+public Response actualizarRuta(@PathParam("id") String id, RutaDTO rutaDTO) {
+    EntityTransaction transaction = entityManager.getTransaction();
+    try {
         Ruta ruta = entityManager.find(Ruta.class, id);
         if (ruta == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Ruta no encontrada").build();
         }
-        ruta.setDescripcion(rutaActualizada.getDescripcion());
+        transaction.begin();
+
+        ruta.setDescripcion(rutaDTO.getDescripcion());
+        // Asegúrate de manejar otros campos de RutaDTO si existen
+
         entityManager.merge(ruta);
-        return Response.ok().build();
+        transaction.commit();
+        return Response.ok().entity("Ruta actualizada correctamente").build();
+    } catch (Exception e) {
+        if (transaction.isActive()) {
+            transaction.rollback();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al actualizar la ruta").build();
     }
+}
 
     @DELETE
-    @Path("/delete/{id}")
-    public Response eliminarRuta(@PathParam("id") String id) {
+@Path("/delete/{id}")
+public Response eliminarRuta(@PathParam("id") String id) {
+     EntityTransaction transaction = entityManager.getTransaction();
+    try {
+        transaction.begin();
+
         Ruta ruta = entityManager.find(Ruta.class, id);
         if (ruta == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Ruta no encontrada").build();
         }
+
         entityManager.remove(ruta);
-        return Response.ok().build();
+        transaction.commit();
+
+        return Response.ok().entity("Ruta eliminada correctamente").build();
+    } catch (Exception e) {
+        if (transaction.isActive()) {
+            transaction.rollback();
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error al eliminar la ruta").build();
     }
+}
+
 }

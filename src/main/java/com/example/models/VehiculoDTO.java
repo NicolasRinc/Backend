@@ -12,6 +12,7 @@ public class VehiculoDTO {
 
     private String placa;
     private String marca;
+    private int capacidadCarga;
     private String Tipodecarroceria;
     private String id;
 
@@ -33,6 +34,16 @@ public class VehiculoDTO {
     public void setMarca(String marca) {
         this.marca = marca;
     }
+
+    public int getCapacidadCarga() {
+        return capacidadCarga;
+    }
+
+    public void setCapacidadCarga(int capacidadCarga) {
+        this.capacidadCarga = capacidadCarga;
+    }
+    
+    
 
     public String getTipodecarroceria() {
         return Tipodecarroceria;
